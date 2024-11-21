@@ -33,13 +33,15 @@ void draw_spin(QPainter& painter, QPointF center, double width, double height, i
 
     if (value == 1)
     {
-        painter.setPen(QPen(QColor(255,0,0),0.01));
+        QRectF r(center - QPointF(width/2/0.7,height/2/0.7),QSizeF(width/0.7,height/0.7));
+        painter.fillRect(r,Qt::GlobalColor::black);
+        painter.setPen(QPen(QColor(255,0,0),0.03));
         painter.drawLine(QLineF(l1,up));
         painter.drawLine(QLineF(r1,up));
     }
     else
     {
-        painter.setPen(QPen(QColor(0,0,255),0.01));
+        painter.setPen(QPen(QColor(0,0,255),0.03));
         painter.drawLine(QLineF(l1,down));
         painter.drawLine(QLineF(r1,down));
     }

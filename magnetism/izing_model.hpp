@@ -111,7 +111,15 @@ struct model {
           energy += s1 * (spins(i1-1,j1) + spins(i1+1,j1) + spins(i1,j1-1) + spins(i1,j1+1));
           energy += s2 * (spins(i2-1,j2) + spins(i2+1,j2) + spins(i2,j2-1) + spins(i2,j2+1));
       }
-      return energy;
+      else
+      {
+          auto s1 = -spins(i1,j1);
+          auto s2 = -spins(i2,j2);
+          energy += s1 * (spins(i1-1,j1) + spins(i1+1,j1) + spins(i1,j1-1) + spins(i1,j1+1));
+          energy += s2 * (spins(i2-1,j2) + spins(i2+1,j2) + spins(i2,j2-1) + spins(i2,j2+1));
+          energy += 3*s1*s2; // two to correct upper two lines, third is real energy
+      }
+      return - J * energy;
   }
 
 //   using kawasaki dynamic
@@ -148,20 +156,30 @@ init_first_pair:
       int i = v[dist(rd)];
 
       double de = 0;
+      int i2,j2;
 
+      try{
       switch(i)
       {
-      case 1: de = delta_energy(i1,j1,i1+1,j1+0); break;
-      case 2: de = delta_energy(i1,j1,i1-1,j1+0); break;
-      case 3: de = delta_energy(i1,j1,i1+0,j1+1); break;
-      case 4: de = delta_energy(i1,j1,i1+0,j1-1); break;
+      case 1: i2 = i1 + 1; if (i1 == w) i2 = 1;
+          de = delta_energy(i1,j1,i2,j1+0); break;
+      case 2: i2 = i1 - 1; if (i1 == 1) i2 = w;
+          de = delta_energy(i1,j1,i2,j1+0); break;
+      case 3: j2 = j1 + 1; if (j1 == h) j2 = 1;
+          de = delta_energy(i1,j1,i1+0,j2); break;
+      case 4: j2 = j1 - 1; if (j1 == 1) j2 = h;
+          de = delta_energy(i1,j1,i1+0,j2); break;
+      }
+      }
+
+      catch (std::exception exc)
+      {
+          std::cout << exc.what() << std::endl;
       }
 
       if (metropolis_algorithm(de))
       {
-
       s0 = -s0;
-
       switch (i) {
         case 1: s1 = -s1; break;
         case 2: s2 = -s2; break;
@@ -170,26 +188,29 @@ init_first_pair:
       }
       }
 
-
+        use_periodic_boundary();
     }
     else
     {
-      throw; // todo later
+      // throw; // todo later
     }
   }
 
 bool metropolis_algorithm(double delta_energy)
       {
-            static std::random_device rd;
-            if (delta_energy < 0.0) return true;
+            // static std::random_device rd;
+            static std::uniform_real_distribution<double> dist(0,1);
+
+            if (delta_energy < 0.0)
+                return true;
             else
             {
-                std::uniform_real_distribution<double> dist(0,1);
-
-                if (dist(rd) < exp(-delta_energy / m_boltzman/temperature))
-                    return true;
+                // if (dist(rd) < exp(-delta_energy / m_boltzman/temperature))
+                if (dist(rd) < exp(-delta_energy / J/temperature)) return true;
                 else return false;
             }
+
+            return false;
       }
 
   auto get_spins()

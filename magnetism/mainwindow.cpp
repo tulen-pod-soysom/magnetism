@@ -33,6 +33,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked(bool checked)
 {
+    using namespace std::chrono_literals;
+
     static QFuture<void> future;
     static bool running = true;
 
@@ -44,12 +46,9 @@ void MainWindow::on_pushButton_clicked(bool checked)
         auto h = ui->SpinBox_2->value();
 
         m.temperature = ui->DoubleSpinBox->value();
+        m.J = ui->jDoubleSpinBox->value();
         m.set_initial_conditions(w,h);
         ui->widget->set_range(w,h);
-
-        ui->widget->set_values(m.spins.begin(),m.spins.end());
-        ui->widget->repaint();
-
 
         ui->pushButton->setText("Стоп");
         future = QtConcurrent::run([&]{start_simulation(running);});
@@ -57,10 +56,18 @@ void MainWindow::on_pushButton_clicked(bool checked)
     }
     else
     {
+        try{
         running = false;
         draw_timer.stop();
         ui->pushButton->setText("Старт");
+        std::this_thread::sleep_for(100ms);
         future.waitForFinished();
+        }
+
+        catch(std::exception exc)
+        {
+            std::cout << exc.what() << std::endl;
+        }
     }
 }
 
@@ -83,6 +90,11 @@ void MainWindow::start_simulation(bool& running){
         double speed = ui->SpinBox_3->value();
         std::this_thread::sleep_for(1000ms/speed - (tp2 - tp1));
     }
+
+
+
+
+    return;
 }
 
 void MainWindow::timer_event(){

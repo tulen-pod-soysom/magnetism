@@ -31,5 +31,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QTimer draw_timer;
+    int mks_counter = 0;
+    int size = 0;
 };
 #endif // MAINWINDOW_H

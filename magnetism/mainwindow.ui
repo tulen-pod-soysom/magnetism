@@ -143,6 +143,105 @@
      </item>
     </layout>
    </widget>
+   <widget class="QSpinBox" name="SpinBox_4">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>620</y>
+      <width>111</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="maximum">
+     <number>1000000000</number>
+    </property>
+    <property name="value">
+     <number>10</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="width_2">
+    <property name="geometry">
+     <rect>
+      <x>511</x>
+      <y>620</y>
+      <width>151</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Положительные спины</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="width_3">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>650</y>
+      <width>151</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Отрицательные спины</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="SpinBox_5">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>650</y>
+      <width>111</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="maximum">
+     <number>1000000000</number>
+    </property>
+    <property name="value">
+     <number>10</number>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="SpinBox_6">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>680</y>
+      <width>111</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="maximum">
+     <number>1000000000</number>
+    </property>
+    <property name="value">
+     <number>10</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="width_4">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>680</y>
+      <width>151</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Количество МКШ</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -150,7 +249,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>

@@ -25,12 +25,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-
-
-
-
-
 void MainWindow::on_pushButton_clicked(bool checked)
 {
     using namespace std::chrono_literals;
@@ -44,6 +38,7 @@ void MainWindow::on_pushButton_clicked(bool checked)
 
         auto w = ui->SpinBox->value();
         auto h = ui->SpinBox_2->value();
+        size = w * h;
 
         m.temperature = ui->DoubleSpinBox->value();
         m.J = ui->jDoubleSpinBox->value();
@@ -60,6 +55,7 @@ void MainWindow::on_pushButton_clicked(bool checked)
         running = false;
         draw_timer.stop();
         ui->pushButton->setText("Старт");
+        mks_counter = 0;
         std::this_thread::sleep_for(100ms);
         future.waitForFinished();
         }
@@ -76,14 +72,25 @@ void MainWindow::start_simulation(bool& running){
 
     std::chrono::system_clock clk;
 
+    int plus_spins  = 0;
+    int minus_spins = 0;
+
     while (running)
     {
         auto tp1 = clk.now();
 
-        m.process();
+        m.process(size); // 1 MK step
+        //m.process();  // not MK step
+        mks_counter++;
 
         auto v = m.get_spins();
         ui->widget->set_values(v.begin(),v.end());
+
+
+        m.get_spins_statistic(plus_spins, minus_spins);
+        ui->SpinBox_4->setValue(plus_spins);
+        ui->SpinBox_5->setValue(minus_spins);
+        ui->SpinBox_6->setValue(mks_counter);
 
         auto tp2 = clk.now();
 

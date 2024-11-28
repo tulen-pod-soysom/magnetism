@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -11,12 +11,16 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
+    qcustomplot.cpp \
     spin_system_renderer.cpp
 
 HEADERS += \
+    adaptive_resolution_vector.hpp \
     mainwindow.h \
+    qcustomplot.h \
     spin_system_renderer.h \
-    izing_model.hpp
+    izing_model.hpp \
+    utils.h
 
 FORMS += \
     mainwindow.ui

@@ -62,6 +62,9 @@
      </item>
      <item row="0" column="1">
       <widget class="QSpinBox" name="SpinBox">
+       <property name="maximum">
+        <number>1000</number>
+       </property>
        <property name="value">
         <number>10</number>
        </property>
@@ -76,6 +79,9 @@
      </item>
      <item row="1" column="1">
       <widget class="QSpinBox" name="SpinBox_2">
+       <property name="maximum">
+        <number>1000</number>
+       </property>
        <property name="value">
         <number>10</number>
        </property>
@@ -97,7 +103,7 @@
         <double>10000.000000000000000</double>
        </property>
        <property name="value">
-        <double>10.000000000000000</double>
+        <double>1.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -105,19 +111,6 @@
       <widget class="QLabel" name="time_speed">
        <property name="text">
         <string>Скорость симуляции</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QSpinBox" name="SpinBox_3">
-       <property name="minimum">
-        <number>1</number>
-       </property>
-       <property name="maximum">
-        <number>100000</number>
-       </property>
-       <property name="value">
-        <number>10</number>
        </property>
       </widget>
      </item>
@@ -141,16 +134,29 @@
        </property>
       </widget>
      </item>
+     <item row="4" column="1">
+      <widget class="QDoubleSpinBox" name="DoubleSpinBox_3">
+       <property name="decimals">
+        <number>2</number>
+       </property>
+       <property name="maximum">
+        <double>10000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>1.000000000000000</double>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QSpinBox" name="SpinBox_4">
     <property name="enabled">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>620</y>
+      <x>530</x>
+      <y>600</y>
       <width>111</width>
       <height>24</height>
      </rect>
@@ -166,10 +172,13 @@
     </property>
    </widget>
    <widget class="QLabel" name="width_2">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>511</x>
-      <y>620</y>
+      <x>371</x>
+      <y>600</y>
       <width>151</width>
       <height>24</height>
      </rect>
@@ -179,10 +188,13 @@
     </property>
    </widget>
    <widget class="QLabel" name="width_3">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>650</y>
+      <x>370</x>
+      <y>630</y>
       <width>151</width>
       <height>24</height>
      </rect>
@@ -192,10 +204,13 @@
     </property>
    </widget>
    <widget class="QSpinBox" name="SpinBox_5">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>650</y>
+      <x>530</x>
+      <y>630</y>
       <width>111</width>
       <height>24</height>
      </rect>
@@ -211,10 +226,13 @@
     </property>
    </widget>
    <widget class="QSpinBox" name="SpinBox_6">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>680</y>
+      <x>530</x>
+      <y>660</y>
       <width>111</width>
       <height>24</height>
      </rect>
@@ -230,10 +248,13 @@
     </property>
    </widget>
    <widget class="QLabel" name="width_4">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>680</y>
+      <x>370</x>
+      <y>660</y>
       <width>151</width>
       <height>24</height>
      </rect>
@@ -249,7 +270,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>20</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

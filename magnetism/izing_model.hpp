@@ -3,7 +3,10 @@
 
 #include <armadillo>
 #include <cstdint>
+#include <deque>
 #include <random>
+#include "utils.h"
+#include "adaptive_resolution_vector.hpp"
 
 namespace izing_model 
 {
@@ -18,8 +21,13 @@ public: // variables
   double J = 1;
   constexpr static double m_boltzman = 1.38E-23;
   double temperature =0 ;
-  double energy = 0;
+  long energy = 0;
   int w,h;
+
+  moving_average<double> mean_energy;
+  adaptive_resolution_vector<double,512> energy_sequence;
+
+  std::mutex data_mutex;
 
 private: // variables
 
@@ -34,7 +42,8 @@ private: // functions
 
   auto delta_energy(int i1, int j1, int i2, int j2)
   {
-      double energy = 0;
+      // double energy = 0;
+      int energy = 0;
       auto s1 = -spins(i1,j1);
       auto s2 = -spins(i2,j2);
 
@@ -45,19 +54,21 @@ private: // functions
           energy += 3*s1*s2; // two to correct upper two lines, third is real energy
 
       return - J * energy;
+      // return -energy;
   }
 
 //   using kawasaki dynamic
-  auto chenge_system_state(bool only_neighbours = true)
+  auto change_system_state(bool only_neighbours = true)
   {
     auto i1 = (*dist_w)(rd);
     auto j1 = (*dist_h)(rd);
 
+    int i2 = i1;
+    int j2 = j1;
+
     if (only_neighbours)
     {
       int dir = (*dist_direction)(rd);
-      int i2 = i1;
-      int j2 = j1;
 
       if (dir == 0)      // left
         i2 -= 1;
@@ -68,30 +79,38 @@ private: // functions
       else               // bot
         j2 -= 1;
 
-      if (i2 == 0)           // left bourder
+      if (i2 == 0)           // left border
         i2 = w;
-      else if (i2 == w + 1)  // right bourder
+      else if (i2 == w + 1)  // right border
         i2 = 1;
       
-      if (j2 == 0)           // bot bourder
+      if (j2 == 0)           // bot border
         j2 = h;
-      else if (j2 == h + 1)  // top bourder
+      else if (j2 == h + 1)  // top border
         j2 = 1;
 
       if (spins(i1, j1) == spins(i2, j2)) // s1 == s2
         return;
 
-      double de = delta_energy(i1, j1, i2, j2);
 
-      if (metropolis_algorithm(de))
-      {
-         std::swap(spins(i1,j1), spins(i2, j2));
-      }
     }
     else
     {
       // throw; // todo later
     }
+
+    int de = delta_energy(i1, j1, i2, j2);
+
+    if (metropolis_algorithm(de))
+    {
+        std::swap(spins(i1,j1), spins(i2, j2));
+        // energy += de;
+    }
+
+    // mean_energy.push_back(energy);
+
+    // energy_sequence.pop_front();
+    // energy_sequence.push_back(mean_energy.get_average());
 
     use_periodic_boundary();
 
@@ -103,7 +122,8 @@ private: // functions
     if (delta_energy < 0.0)
       return true;
 
-    if ((*double_dist)(rd) < exp(-delta_energy / J / temperature)) 
+    // if ((*double_dist)(rd) < exp(-delta_energy / temperature))
+    if ((*double_dist)(rd) < exp(-delta_energy / std::abs(J) / temperature))
       return true;
     
     return false;
@@ -123,10 +143,10 @@ private: // functions
       spins(0,j) = spins(w,j);
     }
 
-    spins(0  ,0  ) = 0;
-    spins(w+1,0  ) = 0;
-    spins(0  ,h+1) = 0;
-    spins(w+1,h+1) = 0;
+    // spins(0  ,0  ) = 0;
+    // spins(w+1,0  ) = 0;
+    // spins(0  ,h+1) = 0;
+    // spins(w+1,h+1) = 0;
   }
 
   template <typename Function>
@@ -178,6 +198,10 @@ public: // functions
     dist_bin = new std::uniform_int_distribution<int>(0, 1);
     dist_direction = new std::uniform_int_distribution<int>(0, 3);
     double_dist = new std::uniform_real_distribution<double>(0, 1);
+
+    // energy_sequence = std::deque<double>(512,0);
+    energy_sequence = adaptive_resolution_vector<double,512>();
+
   
     this->w = w;
     this->h = h;
@@ -227,7 +251,7 @@ public: // functions
 
   double get_full_energy()
   {
-    double energy = 0;
+    int energy = 0;
 
     for (auto i = 1; i < w+1; ++i)
       for (auto j = 1; j < h+1; ++j)
@@ -241,18 +265,21 @@ public: // functions
 
   auto get_spins()
   {
-    return spins.submat(1,1,SizeMat(spins.n_rows-2,spins.n_cols-2));
+    // return spins.submat(1,1,SizeMat(spins.n_rows-2,spins.n_cols-2));
+      return spins;
   }
 
   auto process()
   {
-    chenge_system_state();
+    std::lock_guard<std::mutex> g(data_mutex);
+    change_system_state();
   }
 
-  auto process(uint8_t steps)
+  auto process(uint16_t steps)
   {
+    std::lock_guard<std::mutex> g(data_mutex);
     for(auto i = 0; i < steps; ++i)
-      chenge_system_state();
+      change_system_state();
   }
 
 };

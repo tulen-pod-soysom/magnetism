@@ -73,8 +73,8 @@ void MainWindow::start_simulation(bool& running){
     {
         auto tp1 = clk.now();
 
-        // m.process(size); // 1 MK step
-        m.process();  // not MK step
+        m.process(size); // 1 MK step
+        //m.process();  // not MK step
         mks_counter++;
 
         auto v = m.get_spins();

@@ -88,17 +88,16 @@ private: // functions
         j2 = h;
       else if (j2 == h + 1)  // top border
         j2 = 1;
-
-      if (spins(i1, j1) == spins(i2, j2)) // s1 == s2
-        return;
-
-
     }
     else
     {
-      // throw; // todo later
+        // find another spin
+        i2 = (*dist_w)(rd);
+        j2 = (*dist_h)(rd);
     }
 
+    if (spins(i1, j1) == spins(i2, j2)) // s1 == s2
+      return;
     int de = delta_energy(i1, j1, i2, j2);
 
     if (metropolis_algorithm(de))
@@ -272,7 +271,7 @@ public: // functions
   auto process()
   {
     std::lock_guard<std::mutex> g(data_mutex);
-    change_system_state();
+    change_system_state(false);
   }
 
   auto process(uint16_t steps)

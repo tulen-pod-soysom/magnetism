@@ -61,6 +61,7 @@ private: // functions
 //   using kawasaki dynamic
   auto change_system_state(bool only_neighbours = true)
   {
+    init:
     auto i1 = (*dist_w)(rd);
     auto j1 = (*dist_h)(rd);
 
@@ -98,7 +99,7 @@ private: // functions
     }
 
     if (spins(i1, j1) == spins(i2, j2)) // s1 == s2
-      return;
+      goto init;
     int de = delta_energy(i1, j1, i2, j2);
 
     if (metropolis_algorithm(de))

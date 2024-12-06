@@ -19,8 +19,8 @@ int main(int argc, char** argv)
     double N = 20;
     double J = 1;
 
-    int w = 20;
-    int h = 20;
+    int w = 50;
+    int h = 50;
 
     std::vector<double> energy(N);
     std::vector<double> energy_derivative(N);
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
     double dT = (r - l) * T_c / double(N);
     std::cout << "Tc: " << T_c << std::endl;
 
-    std::cout << "T: " << T << ", dT: " << dT << std::endl;  
+    std::cout << "T: " << T << ", dT: " << dT << std::endl;
 
     T -= dT; // T(0) = T
 
@@ -37,14 +37,14 @@ int main(int argc, char** argv)
     m.set_initial_conditions(w,h);
     m.set_only_neighbours(false);
     m.J = J;
-    
+
     int mks = w * h;
 
     int init_steps = 1000;
-    int mean_steps = 1000;
+    int mean_steps = 500;
 
     for (auto i = 0; i < N; ++i)
-    {        
+    {
         T += dT;
         std::cout << "Temprature: " << T << std::endl;
 
@@ -59,7 +59,7 @@ int main(int argc, char** argv)
             energy_values[i] = m.get_full_energy();
         }
 
-        auto average_energy = std::accumulate(energy_values.begin(),energy_values.end(),0.) / double(mean_steps);
+        auto average_energy = std::accumulate(energy_values.begin(),energy_values.end(),0.) / double(mean_steps) / mks;
         energy[i] = average_energy;
         std::cout << i <<'/'<< N <<std::endl;
     }

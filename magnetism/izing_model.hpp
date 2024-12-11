@@ -23,6 +23,7 @@ public: // variables
   double temperature =0 ;
   long energy = 0;
   int w,h;
+  bool only_neighbours = true;
 
   moving_average<double> mean_energy;
   adaptive_resolution_vector<double,512> energy_sequence;
@@ -60,6 +61,8 @@ private: // functions
 //   using kawasaki dynamic
   auto change_system_state(bool only_neighbours = true)
   {
+    init:
+
     auto i1 = (*dist_w)(rd);
     auto j1 = (*dist_h)(rd);
 
@@ -88,17 +91,16 @@ private: // functions
         j2 = h;
       else if (j2 == h + 1)  // top border
         j2 = 1;
-
-      if (spins(i1, j1) == spins(i2, j2)) // s1 == s2
-        return;
-
-
     }
     else
     {
-      // throw; // todo later
+        // find another spin
+        i2 = (*dist_w)(rd);
+        j2 = (*dist_h)(rd);
     }
 
+    if (spins(i1, j1) == spins(i2, j2)) // s1 == s2
+      goto init;
     int de = delta_energy(i1, j1, i2, j2);
 
     if (metropolis_algorithm(de))
@@ -206,25 +208,32 @@ public: // functions
     this->w = w;
     this->h = h;
     spins = Mat<char>(w+2,h+2);
+
+
     
     for (auto i = 1; i < w + 1; ++i)
+    {
       for (auto j = 1; j < h + 1; ++j)
       {
-          if (i <= w / 2)
-              spins(i,j) = 1;
-          else
-              spins(i,j) = -1;
+        spins(i,j) = 1;
       }
+    }
 
-    int i1, i2, j1, j2;
-    for (int i = 0; i < (w + 1) * (h + 1); ++i)
+    uint64_t counter = 0;
+    uint64_t half = h * w / 2;
+
+    int i1, j1;
+
+    while (counter != half)
     {
       i1 = (*dist_w)(rd);
-      i2 = (*dist_w)(rd);
       j1 = (*dist_h)(rd);
-      j2 = (*dist_h)(rd);
 
-      std::swap(spins(i1, j1), spins(i2, j2));
+      if (spins(i1, j1) == 1)
+      {
+        spins(i1, j1) = -1;
+        counter++;
+      }
     }
 
     use_periodic_boundary();
@@ -280,6 +289,12 @@ public: // functions
     std::lock_guard<std::mutex> g(data_mutex);
     for(auto i = 0; i < steps; ++i)
       change_system_state();
+  }
+
+  void set_only_neighbours(bool flag)
+  {
+      only_neighbours = flag;
+      return;
   }
 
 };

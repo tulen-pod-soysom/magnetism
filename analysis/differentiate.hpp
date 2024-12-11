@@ -12,6 +12,7 @@ void differentiate(InputIt begin, InputIt end, OutputIt output, Real step = 1.0)
     for (auto i = 1; i < n - 1; ++i)
     {
         *(output + i) = (*(begin + i + 1) - *(begin + i - 1)) / 2.0 / step;
+        // *(output + i) = (*(begin + i + 1) - *(begin + i)) / step;
     }
 
     *(output + n - 1) = *(end - 1 - 2) - 4* *(end - 1 - 1) + 3* *(end - 1);

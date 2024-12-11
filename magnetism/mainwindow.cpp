@@ -29,6 +29,8 @@ void MainWindow::on_pushButton_clicked(bool checked)
     if (checked)
     {
         running = true;
+        bool only_neighbours = ui->only_neighboursCheckBox->isChecked();
+        m.set_only_neighbours(only_neighbours);
 
         auto w = ui->SpinBox->value();
         auto h = ui->SpinBox_2->value();
@@ -73,8 +75,8 @@ void MainWindow::start_simulation(bool& running){
     {
         auto tp1 = clk.now();
 
-        // m.process(size); // 1 MK step
-        m.process();  // not MK step
+        m.process(size); // 1 MK step
+        //m.process();  // not MK step
         mks_counter++;
 
         auto v = m.get_spins();
@@ -95,7 +97,8 @@ void MainWindow::start_simulation(bool& running){
 
         // ui->SpinBox_4->setValue(plus_spins);
         // ui->SpinBox_5->setValue(minus_spins);
-        // ui->SpinBox_6->setValue(mks_counter);
+        if (!(mks_counter % 100))
+            ui->SpinBox_6->setValue(mks_counter);
 
         auto tp2 = clk.now();
 

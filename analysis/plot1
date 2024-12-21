@@ -1,5 +1,0 @@
-#!/bin/gnuplot
-
-plot 'energy.txt'
-
-pause mouse close

@@ -119,3 +119,4 @@ void MainWindow::timer_event(){
     // ui->widget_2->replot();
 }
 
+

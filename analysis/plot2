@@ -1,4 +1,0 @@
-#!/bin/gnuplot
-
-plot 'energy_derivative.txt'
-pause mouse close

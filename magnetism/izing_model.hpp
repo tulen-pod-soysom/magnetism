@@ -41,6 +41,15 @@ private: // variables
 
 private: // functions
 
+  auto is_neighbour(int i1, int j1, int i2, int j2)
+  {
+    return
+    ((i2 == i1 + 1) && (j2 == j1 + 0)) || ((i2 == i1 - (w - 1)) && (j2 == j1 + 0)) ||
+    ((i2 == i1 - 1) && (j2 == j1 + 0)) || ((i2 == i1 + (w - 1)) && (j2 == j1 + 0)) ||
+    ((i2 == i1 + 0) && (j2 == j1 + 1)) || ((i2 == i1 + 0) && (j2 == j1 + (h - 1))) ||
+    ((i2 == i1 + 0) && (j2 == j1 - 1)) || ((i2 == i1 + 0) && (j2 == j1 - (h - 1)));
+  }
+
   auto delta_energy(int i1, int j1, int i2, int j2)
   {
       // double energy = 0;
@@ -48,11 +57,19 @@ private: // functions
       auto s1 = -spins(i1,j1);
       auto s2 = -spins(i2,j2);
 
-      energy += s1 * (spins(i1 - 1,j1) + spins(i1 + 1,j1) + spins(i1,j1 - 1) + spins(i1,j1 + 1));
-      energy += s2 * (spins(i2 - 1,j2) + spins(i2 + 1,j2) + spins(i2,j2 - 1) + spins(i2,j2 + 1));
-      
-      if (!((abs(i1 - i2) > 1) || (abs(j1 - j2) > 1)))
-          energy += 3*s1*s2; // two to correct upper two lines, third is real energy
+      energy += 2 * s1 * (spins(i1 - 1,j1) + spins(i1 + 1,j1) + spins(i1,j1 - 1) + spins(i1,j1 + 1));
+      energy += 2 * s2 * (spins(i2 - 1,j2) + spins(i2 + 1,j2) + spins(i2,j2 - 1) + spins(i2,j2 + 1));
+
+      if (is_neighbour(i1, j1, i2, j2))
+      {
+        // energy -= 2*spins(i1,j1)*spins(i2,j2);
+        // energy -= s1*spins(i2,j2);
+        // energy -= s2*spins(i1,j1);
+        energy -= 2*2;
+        // energy -= 1;
+        // energy -= 3*s1*s2; // two to correct upper two lines, third is real energy
+        // energy += spins(i1,j1)*spins(i2,j2);
+      }
 
       return - J * energy;
       // return -energy;
@@ -124,7 +141,7 @@ private: // functions
     if (delta_energy < 0.0)
       return true;
 
-    // if ((*double_dist)(rd) < exp(-delta_energy / temperature))
+    // if ((*double_dist)(rd) < exp(-delta_energy / J / temperature))
     if ((*double_dist)(rd) < exp(-delta_energy / std::abs(J) / temperature))
       return true;
     

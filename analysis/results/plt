@@ -1,0 +1,17 @@
+#!/bin/gnuplot
+
+set terminal png
+
+set grid
+
+set xlabel "Температура, [J/k_B]"
+
+set ylabel "средняя энергия, [J]"
+# set title "Зависимость средней энергии от температуры"
+set output "energy.png"
+p "energy.txt" w l
+
+set ylabel "Теплоемкость, [k_B]"
+# set title "Зависимость теплоемкости от температуры"
+set output "energy_derivative.png"
+p "energy_derivative.txt" w l

@@ -1,0 +1,3 @@
+/home/aleksey/code/magnetism/analysis/build/CMakeFiles/analysis.dir
+/home/aleksey/code/magnetism/analysis/build/CMakeFiles/edit_cache.dir
+/home/aleksey/code/magnetism/analysis/build/CMakeFiles/rebuild_cache.dir

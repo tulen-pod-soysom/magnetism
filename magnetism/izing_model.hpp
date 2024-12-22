@@ -19,6 +19,7 @@ struct model
 {
 public: // variables
   double J = 1;
+  double per_spins = 0.5;
   constexpr static double m_boltzman = 1.38E-23;
   double temperature =0 ;
   long energy = 0;
@@ -226,29 +227,37 @@ public: // functions
     this->h = h;
     spins = Mat<char>(w+2,h+2);
 
+    uint64_t part = h * w * per_spins;  // number of negative spins
 
+    int tempFillSpins  = 1;
+    int tempAddedSpins = -1;
+    if (per_spins > 0.5) // per_spins - persent of negative spins
+    {
+        tempFillSpins  = -1;
+        tempAddedSpins = 1;
+        part = h * w * (1 - per_spins);
+    }
     
     for (auto i = 1; i < w + 1; ++i)
     {
       for (auto j = 1; j < h + 1; ++j)
       {
-        spins(i,j) = 1;
+        spins(i,j) = tempFillSpins;
       }
     }
 
     uint64_t counter = 0;
-    uint64_t half = h * w / 2;
 
     int i1, j1;
 
-    while (counter != half)
+    while (counter != part)
     {
       i1 = (*dist_w)(rd);
       j1 = (*dist_h)(rd);
 
-      if (spins(i1, j1) == 1)
+      if (spins(i1, j1) == tempFillSpins)
       {
-        spins(i1, j1) = -1;
+        spins(i1, j1) = tempAddedSpins;
         counter++;
       }
     }
@@ -293,6 +302,12 @@ public: // functions
   {
     // return spins.submat(1,1,SizeMat(spins.n_rows-2,spins.n_cols-2));
       return spins;
+  }
+
+  void set_per_spins(double pers)
+  {
+    per_spins = pers;
+    return;
   }
 
   auto process()

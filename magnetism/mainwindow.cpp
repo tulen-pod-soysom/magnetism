@@ -38,7 +38,9 @@ void MainWindow::on_pushButton_clicked(bool checked)
 
         m.temperature = ui->DoubleSpinBox->value();
         m.J = ui->jDoubleSpinBox->value();
+        m.set_per_spins(ui->neg_spins_per->value());
         m.set_initial_conditions(w,h);
+
 
 
         ui->widget->set_range(w+2,h+2);
@@ -95,8 +97,8 @@ void MainWindow::start_simulation(bool& running){
 
         // changing values to often causes a crash
 
-        // ui->SpinBox_4->setValue(plus_spins);
-        // ui->SpinBox_5->setValue(minus_spins);
+         ui->SpinBox_4->setValue(plus_spins);
+         ui->SpinBox_5->setValue(minus_spins);
         if (!(mks_counter % 100))
             ui->SpinBox_6->setValue(mks_counter);
 
